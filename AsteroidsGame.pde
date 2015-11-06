@@ -74,7 +74,7 @@ public class Starfield
 
 public class SpaceShip extends Floater //extends Floater  
 {   
-    //your code here
+    // your code here
     public SpaceShip()
     {
       corners = 6;
