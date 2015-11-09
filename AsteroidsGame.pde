@@ -13,6 +13,7 @@ public void setup()
 Starfield space[] = new Starfield[100];
 SpaceShip s = new SpaceShip();
 ArrayList<Particle> particles = new ArrayList<Particle>();
+Asteroid a = new Asteroid();
 
 private boolean spacePressed;
 private int pressedCount = 0;
@@ -26,6 +27,8 @@ public void draw()
   {
     space[i].show();
   }
+  a.show();
+  a.move();
   s.show();
   s.move();
   if (spacePressed)
@@ -148,6 +151,52 @@ public void keyPressed()
     }
   }
 }
+
+public class Asteroid extends Floater
+{
+  private int rotSpeed;
+  public Asteroid()
+  {
+    rotSpeed = (int)(Math.random()*11)-5;
+    corners = 6;
+    xCorners = new int[corners];
+    yCorners = new int[corners];
+    xCorners[0] = 10;
+    yCorners[0] = 0;
+    xCorners[1] = 0;
+    yCorners[1] = -15;
+    xCorners[2] = -20;
+    yCorners[2] = -5;
+    xCorners[3] = -20;
+    yCorners[3] = 5;
+    xCorners[4] = -10;
+    yCorners[4] = 20;
+    xCorners[5] = 5;
+    yCorners[5] = 20;
+    myColor = color(128);
+    myCenterX = 250;
+    myCenterY = 250;
+    myDirectionX = 0;
+    myDirectionY = 0;
+    myPointDirection = 0;  
+  }
+  public void move()
+  {
+    rotate(rotSpeed);
+    super.move();
+  }
+  public void setX(int x) {myCenterX = x;}
+  public int getX() {return (int)myCenterX;}
+  public void setY(int y) {myCenterY = y;}
+  public int getY() {return (int)myCenterY;}
+  public void setDirectionX(double x) {myDirectionX = x;}
+  public double getDirectionX() {return myDirectionX;}
+  public void setDirectionY(double y) {myDirectionY = y;}
+  public double getDirectionY() {return myDirectionY;}
+  public void setPointDirection(int degrees) {myPointDirection = degrees;}
+  public double getPointDirection() {return myPointDirection;}
+}
+
 public class Particle
 {
   private int myTint;
