@@ -8,12 +8,16 @@ public void setup()
   {
     space[i] = new Starfield();
   }
+  for (int i = 0; i < debris.length; i++)
+  {
+    debris[i] = new Asteroid();
+  }
 } 
 
 Starfield space[] = new Starfield[100];
 SpaceShip s = new SpaceShip();
 ArrayList<Particle> particles = new ArrayList<Particle>();
-Asteroid a = new Asteroid();
+Asteroid debris[] = new Asteroid[20];
 
 private boolean spacePressed;
 private int pressedCount = 0;
@@ -27,8 +31,11 @@ public void draw()
   {
     space[i].show();
   }
-  a.show();
-  a.move();
+  for (int i = 0; i < debris.length; i++)
+  {
+    debris[i].show();
+    debris[i].move();
+  }
   s.show();
   s.move();
   if (spacePressed)
@@ -174,8 +181,8 @@ public class Asteroid extends Floater
     xCorners[5] = 5;
     yCorners[5] = 20;
     myColor = color(128);
-    myCenterX = 250;
-    myCenterY = 250;
+    myCenterX = Math.random()*500;
+    myCenterY = Math.random()*500;
     myDirectionX = 0;
     myDirectionY = 0;
     myPointDirection = 0;  
