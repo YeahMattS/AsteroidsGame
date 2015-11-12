@@ -19,7 +19,7 @@ SpaceShip s = new SpaceShip();
 ArrayList<Particle> particles = new ArrayList<Particle>();
 Asteroid debris[] = new Asteroid[20];
 
-private boolean spacePressed;
+private boolean spacePressed, aPressed, dPressed, wPressed;
 private int pressedCount = 0;
 private int timeOne;
 
@@ -33,10 +33,24 @@ public void draw()
   }
   for (int i = 0; i < debris.length; i++)
   {
+    // debris[i].setDirectionX(Math.random()*2);
+    // debris[i].setDirectionY(Math.random()*2);
     debris[i].show();
     debris[i].move();
   }
   s.show();
+  if (aPressed)
+  {
+    s.rotate(-5);
+  }
+  if (dPressed)
+  {
+    s.rotate(5);
+  }
+  if (wPressed)
+  {
+    s.accelerate(0.3);
+  }
   s.move();
   if (spacePressed)
   {
@@ -124,17 +138,20 @@ public class SpaceShip extends Floater //extends Floater
 
 public void keyPressed()
 {
-  if (key == 'q')
+  if (key == 'a')
   {
-    s.rotate(-10);
+    aPressed = true;
+    // s.rotate(-10);
   }
-  else if (key == 'e')
+  else if (key == 'd')
   {
-    s.rotate(10);
+    dPressed = true;
+    // s.rotate(10);
   }
   else if (key == 'w')
   {
-    s.accelerate(0.5);
+    wPressed = true;
+    // s.accelerate(0.5);
   }
   else if (key == ' ')
   {
@@ -159,12 +176,28 @@ public void keyPressed()
   }
 }
 
+public void keyReleased()
+{
+  if (key == 'a')
+  {
+    aPressed = false;
+  }
+  else if (key == 'd')
+  {
+    dPressed = false;
+  }
+  else if (key == 'w')
+  {
+    wPressed = false;
+  }
+}
+
 public class Asteroid extends Floater
 {
   private int rotSpeed;
   public Asteroid()
   {
-    rotSpeed = (int)(Math.random()*11)-5;
+    rotSpeed = (int)(Math.random()*7)-3;
     corners = 6;
     xCorners = new int[corners];
     yCorners = new int[corners];
@@ -183,8 +216,8 @@ public class Asteroid extends Floater
     myColor = color(128);
     myCenterX = Math.random()*500;
     myCenterY = Math.random()*500;
-    myDirectionX = 0;
-    myDirectionY = 0;
+    myDirectionX = Math.random()-0.5;
+    myDirectionY = Math.random()-0.5;
     myPointDirection = 0;  
   }
   public void move()
