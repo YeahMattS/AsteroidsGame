@@ -8,16 +8,17 @@ public void setup()
   {
     space[i] = new Starfield();
   }
-  for (int i = 0; i < debris.length; i++)
+  for (int i = 0; i < 20; i++)
   {
-    debris[i] = new Asteroid();
+    debris.add(new Asteroid());
   }
 } 
 
 Starfield space[] = new Starfield[100];
 SpaceShip s = new SpaceShip();
 ArrayList<Particle> particles = new ArrayList<Particle>();
-Asteroid debris[] = new Asteroid[20];
+ArrayList <Asteroid> debris = new ArrayList<Asteroid>();
+//Asteroid debris[] = new Asteroid[20];
 
 private boolean spacePressed, aPressed, dPressed, wPressed;
 private int pressedCount = 0;
@@ -31,12 +32,20 @@ public void draw()
   {
     space[i].show();
   }
-  for (int i = 0; i < debris.length; i++)
+  for (int i = 0; i < debris.size(); i++)
   {
     // debris[i].setDirectionX(Math.random()*2);
     // debris[i].setDirectionY(Math.random()*2);
-    debris[i].show();
-    debris[i].move();
+    Asteroid a = debris.get(i);
+    a.show();
+    a.move();
+    if (dist(a.getX(), a.getY(), s.getX(), s.getY()) <= 20)
+    {
+      debris.remove(i);
+      debris.add(new Asteroid());
+    }
+    // debris[i].show();
+    // debris[i].move();
   }
   s.show();
   if (aPressed)
