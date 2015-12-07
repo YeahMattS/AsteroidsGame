@@ -12,76 +12,111 @@ public void setup()
   {
     debris.add(new Asteroid());
   }
+  // for (int i = 0; i < 1; i++)
+  // {
+  //   bullets.add(new Bullet());
+  // }
 } 
 
 Starfield space[] = new Starfield[100];
 SpaceShip s = new SpaceShip();
 ArrayList<Particle> particles = new ArrayList<Particle>();
 ArrayList <Asteroid> debris = new ArrayList<Asteroid>();
-//Asteroid debris[] = new Asteroid[20];
+ArrayList <Bullet> bullets = new ArrayList<Bullet>();
 
 private boolean spacePressed, aPressed, dPressed, wPressed;
+private boolean gameOver = false;
 private int pressedCount = 0;
 private int timeOne;
 
 public void draw() 
 {
   //your code here
-  background(0);
-  for (int i = 0; i < 100; i++)
+
+  if (!gameOver)
   {
-    space[i].show();
-  }
-  for (int i = 0; i < debris.size(); i++)
-  {
-    // debris[i].setDirectionX(Math.random()*2);
-    // debris[i].setDirectionY(Math.random()*2);
-    Asteroid a = debris.get(i);
-    a.show();
-    a.move();
-    if (dist(a.getX(), a.getY(), s.getX(), s.getY()) <= 20)
+    background(0);
+    for (int i = 0; i < 100; i++)
     {
-      debris.remove(i);
-      debris.add(new Asteroid());
+      space[i].show();
     }
-    // debris[i].show();
-    // debris[i].move();
-  }
-  s.show();
-  if (aPressed)
-  {
-    s.rotate(-5);
-  }
-  if (dPressed)
-  {
-    s.rotate(5);
-  }
-  if (wPressed)
-  {
-    s.accelerate(0.3);
-  }
-  s.move();
-  if (spacePressed)
-  {
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < bullets.size(); i++)
     {
-      Particle part = particles.get(i);
-      part.show();
-      part.move();
-      // part.wrap();
-      if (part.getTint() < 0)
+      Bullet b = bullets.get(i);
+      b.show();
+      b.move();
+    }
+    for (int i = debris.size()-1; i >= 0; i--)
+    {
+      // debris[i].setDirectionX(Math.random()*2);
+      // debris[i].setDirectionY(Math.random()*2);
+      Asteroid a = debris.get(i);
+      a.show();
+      a.move();
+      // if (dist(a.getX(), a.getY(), s.getX(), s.getY()) <= 20)
+      // {
+      //   debris.remove(i);
+      //   debris.add(new Asteroid());
+      // }
+      for (int j = bullets.size()-1; j >= 0; j--)
       {
-        spacePressed = false;
-        break;
+        Bullet b = bullets.get(j);
+        if (dist(a.getX(), a.getY(), b.getX(), b.getY()) <= 15)
+        {
+          debris.remove(i);
+          bullets.remove(j);
+        }
+      }
+      // debris[i].show();
+      // debris[i].move();
+    }
+    s.show();
+    if (aPressed)
+    {
+      s.rotate(-4);
+    }
+    if (dPressed)
+    {
+      s.rotate(4);
+    }
+    if (wPressed)
+    {
+      s.accelerate(0.2);
+    }
+    s.move();
+    if (spacePressed)
+    {
+      for (int i = 0; i < 10; i++)
+      {
+        Particle part = particles.get(i);
+        part.show();
+        part.move();
+        // part.wrap();
+        if (part.getTint() < 0)
+        {
+          spacePressed = false;
+          break;
+        }
+      }
+      if (!spacePressed)
+      {
+        for (int i = 9; i >= 0; i--)
+        {
+          particles.remove(i);
+        }
       }
     }
-    if (!spacePressed)
-    {
-      for (int i = 9; i >= 0; i--)
-      {
-        particles.remove(i);
-      }
-    }
+  }
+  if (debris.size() == 0)
+  {
+    gameOver = true;
+    fill(255, 0, 0);
+    smooth();
+    textSize(64);
+    textAlign(CENTER);
+    text("YOU WIN", width/2, height/2);
+    textSize(32);
+    text("Press p to play again", width/2, height/2+50);
   }
 }
 
@@ -145,6 +180,10 @@ public class SpaceShip extends Floater //extends Floater
     public double getPointDirection() {return myPointDirection;}
 }
 
+public void mousePressed()
+{
+  bullets.add(new Bullet());
+}
 public void keyPressed()
 {
   if (key == 'a')
@@ -181,6 +220,19 @@ public void keyPressed()
       }
       s.setX(mouseX);
       s.setY(mouseY);
+    }
+  }
+  if (key == 'p')
+  {
+    gameOver = false;
+    background(0);
+    for (int i = 0; i < 100; i++)
+    {
+      space[i] = new Starfield();
+    }
+    for (int i = 0; i < 20; i++)
+    {
+      debris.add(new Asteroid());
     }
   }
 }
@@ -233,6 +285,45 @@ public class Asteroid extends Floater
   {
     rotate(rotSpeed);
     super.move();
+  }
+  public void setX(int x) {myCenterX = x;}
+  public int getX() {return (int)myCenterX;}
+  public void setY(int y) {myCenterY = y;}
+  public int getY() {return (int)myCenterY;}
+  public void setDirectionX(double x) {myDirectionX = x;}
+  public double getDirectionX() {return myDirectionX;}
+  public void setDirectionY(double y) {myDirectionY = y;}
+  public double getDirectionY() {return myDirectionY;}
+  public void setPointDirection(int degrees) {myPointDirection = degrees;}
+  public double getPointDirection() {return myPointDirection;}
+}
+
+public class Bullet extends Floater
+{
+  Bullet()
+  {
+    myCenterX = s.getX();
+    myCenterY = s.getY();
+    myPointDirection = s.getPointDirection();
+    double dRadians = myPointDirection*(Math.PI/180);
+    myDirectionX = 5*Math.cos(dRadians) + s.getDirectionX();
+    myDirectionY = 5*Math.sin(dRadians) + s.getDirectionY();
+  }
+  public void show()
+  {
+    fill(255, 242, 0);
+    ellipse((float)myCenterX, (float)myCenterY, 10, 10);
+  }
+  public void move()
+  {
+    myCenterX += myDirectionX;    
+    myCenterY += myDirectionY;  
+   
+    if(myCenterX >width+10 || myCenterX<-10 || myCenterY >height+10 || myCenterY <-10)
+    {
+      myDirectionX = 0;
+      myDirectionY = 0;
+    } 
   }
   public void setX(int x) {myCenterX = x;}
   public int getX() {return (int)myCenterX;}
