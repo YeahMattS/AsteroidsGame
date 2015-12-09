@@ -319,6 +319,8 @@ public class Bullet extends Floater
     myCenterX = s.getX();
     myCenterY = s.getY();
     myPointDirection = s.getPointDirection();
+    // yes, that means you have to actually point the spaceship 
+    // in the direction you want to shoot
     double dRadians = myPointDirection*(Math.PI/180);
     myDirectionX = 5*Math.cos(dRadians) + s.getDirectionX();
     myDirectionY = 5*Math.sin(dRadians) + s.getDirectionY();
@@ -335,8 +337,10 @@ public class Bullet extends Floater
    
     if(myCenterX >width+10 || myCenterX<-10 || myCenterY >height+10 || myCenterY <-10)
     {
-      myDirectionX = 0;
-      myDirectionY = 0;
+      // get the bullets out of the way so they don't nuke asteroids accidentally
+      // when the asteroids go outside the bounds of the screen
+      myCenterX = 1000;
+      myCenterY = 1000;
     } 
   }
   public void setX(int x) {myCenterX = x;}
