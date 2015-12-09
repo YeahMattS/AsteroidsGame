@@ -53,11 +53,10 @@ public void draw()
       Asteroid a = debris.get(i);
       a.show();
       a.move();
-      // if (dist(a.getX(), a.getY(), s.getX(), s.getY()) <= 20)
-      // {
-      //   debris.remove(i);
-      //   debris.add(new Asteroid());
-      // }
+      if (dist(a.getX(), a.getY(), s.getX(), s.getY()) <= 20)
+      {
+        gameOver = true;
+      }
       for (int j = bullets.size()-1; j >= 0; j--)
       {
         Bullet b = bullets.get(j);
@@ -110,13 +109,24 @@ public void draw()
   if (debris.size() == 0)
   {
     gameOver = true;
+  }
+  if (gameOver)
+  {
     fill(255, 0, 0);
     smooth();
     textSize(64);
     textAlign(CENTER);
-    text("YOU WIN", width/2, height/2);
+    if (debris.size()==0)
+    {
+      text("YOU WIN", width/2, height/2);
+    }
+    else 
+    {
+      text("YOU LOSE", width/2, height/2);
+    }
     textSize(32);
     text("Press p to play again", width/2, height/2+50);
+
   }
 }
 
@@ -222,7 +232,7 @@ public void keyPressed()
       s.setY(mouseY);
     }
   }
-  if (key == 'p')
+  if (key == 'p' && gameOver)
   {
     gameOver = false;
     background(0);
@@ -230,10 +240,14 @@ public void keyPressed()
     {
       space[i] = new Starfield();
     }
-    for (int i = 0; i < 20; i++)
+    for (int i = debris.size()-1; i < 20; i++)
     {
       debris.add(new Asteroid());
-    }
+    }  
+    s.setX((int)(Math.random()*width));
+    s.setY((int)(Math.random()*height));
+    s.setDirectionX(0);
+    s.setDirectionY(0);
   }
 }
 
